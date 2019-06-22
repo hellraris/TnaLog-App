@@ -16,6 +16,7 @@ class testViewer extends Component {
             nowQuestionIdx: 0,
             markingSheet: this.props.markingSheet
         }
+
     }
 
     render() {
@@ -54,12 +55,12 @@ class testViewer extends Component {
                                                 <TouchableOpacity
                                                     key={selectionIdx}
                                                     style={styles.selection}
-                                                    onPress={() => this.handleMarking(subQuestion.subQuestionNo, selectionIdx)}
+                                                    onPress={() => this.props.handleMarking(subQuestion.subQuestionNo, selection.id)}
                                                 >
                                                     <CheckBox
                                                         style={{ marginBottom: 10 }}
-                                                        checked={this.confirmMarking(subQuestion.subQuestionNo, selectionIdx)}
-                                                        onPress={() => this.handleMarking(subQuestion.subQuestionNo, selectionIdx)}
+                                                        checked={this.state.markingSheet[subQuestion.subQuestionNo].has(selection.id)}
+                                                        onPress={() => this.props.handleMarking(subQuestion.subQuestionNo, selection.id)}
                                                     />
                                                     <Text style={{ marginTop: 5 }}>{selection.text}</Text>
                                                 </TouchableOpacity>
@@ -88,54 +89,6 @@ class testViewer extends Component {
                 </View>
             </View>
         );
-    }
-
-    // function
-
-    handleMarking = (subQuestionNo, selectionIdx) => {
-
-        let newMarkingSheet = []
-
-        if (this.confirmMarking(subQuestionNo, selectionIdx)) {
-            newMarkingSheet = this.state.markingSheet.map((data, index) => {
-                if (index == subQuestionNo) {
-                    const newMarking = data.marking.filter((data) => {
-                        return data !== selectionIdx;
-                    });
-                    return {
-                        ...data,
-                        marking: newMarking
-                    }
-                } else {
-                    return data;
-                }
-            })
-        } else {
-            newMarkingSheet = this.state.markingSheet.map((data, index) => {
-                if (index == subQuestionNo) {
-                    return {
-                        ...data,
-                        marking: data.marking.concat(selectionIdx)
-                    }
-                } else {
-                    return data;
-                }
-            })
-        }
-
-        this.setState({
-            ...this.state,
-            markingSheet: newMarkingSheet
-        })
-    }
-
-    confirmMarking = (subQuestionNo, selectionIdx) => {
-        let result = false;
-
-        result = this.state.markingSheet[subQuestionNo].marking.some((data) => {
-            return data === selectionIdx;
-        })
-        return result;
     }
 
     prevQuestion = (event) => {

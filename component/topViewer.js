@@ -13,7 +13,7 @@ class topViewer extends Component {
 
         this.state = {
             questions: null,
-            markingSheet: [],
+            markingSheet: null,
             totalQuestionCnt: 0,
             complete: false,
             updated: false
@@ -51,9 +51,9 @@ class topViewer extends Component {
                 {(this.state.questions && this.state.updated) ?
                     <View style={styles.card}>
                         {this.state.complete ?
-                            <ResultViewer></ResultViewer>
+                            <ResultViewer questions={this.state.questions} markingSheet={this.state.markingSheet}></ResultViewer>
                             :
-                            <TestViewer questions={this.state.questions} markingSheet={this.state.markingSheet} submitTest={this.submitTest}></TestViewer>
+                            <TestViewer questions={this.state.questions} markingSheet={this.state.markingSheet} handleMarking={this.handleMarking} confirmMarking={this.confirmMarking} submitTest={this.submitTest}></TestViewer>
                         }
                     </View>
                     : <Text>please wait</Text>
@@ -94,7 +94,7 @@ class topViewer extends Component {
             console.log(err);
         }
     }
-   
+
     setTestingState = async (questions) => {
 
         let subQuestionNo = 0;
@@ -117,18 +117,36 @@ class topViewer extends Component {
 
         const newMarkingSheet = []
         for (let index = 0; index < subQuestionNo; index++) {
-            newMarkingSheet.push({ subQuestionNo: index, marking: [] });
+            newMarkingSheet.push(new Set());
         }
+
 
         await this.setState({
             ...this.state,
             questions: newQuestions,
-            markingSheet: newMarkingSheet,
             totalQuestionCnt: subQuestionNo,
+            markingSheet: newMarkingSheet,
             updated: true
         });
     }
-    
+
+    handleMarking = (subQuestionNo, selectionId) => {
+
+        let newMarkingSheet = this.state.markingSheet;
+
+        newMarkingSheet[subQuestionNo].has(selectionId) ? newMarkingSheet[subQuestionNo].delete(selectionId) : newMarkingSheet[subQuestionNo].add(selectionId);
+       
+        this.setState({
+            ...this.state,
+            markingSheet: newMarkingSheet
+        })
+    }
+
+
+    confirmMarking = (subQuestionNo, selectionId) => {
+        return this.state.markingSheet[subQuestionNo].has(selectionId);
+    }
+
     // function End
 }
 
