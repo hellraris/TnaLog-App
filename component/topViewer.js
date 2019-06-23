@@ -94,9 +94,13 @@ class TopViewer extends Component {
         }
     }
 
+    // 테스트 준비 상태 세팅
     setTestingState = async (questions) => {
 
+        if (questions.length === 0) return;
+
         let subQuestionNo = 0;
+        // 서브퀘스트에 questionNo부여
         const newQuestions = questions.map((question) => {
             const newSubQuestion = question.subQuestions.map((subQuestion) => {
                 const newSubQuestion = {
@@ -114,11 +118,11 @@ class TopViewer extends Component {
             return newQuestion;
         });
 
+         // 서브퀘스트 수만큼 답안시트 작성
         const newMarkingSheet = []
         for (let index = 0; index < subQuestionNo; index++) {
             newMarkingSheet.push(new Set());
         }
-
 
         await this.setState({
             ...this.state,
@@ -129,16 +133,53 @@ class TopViewer extends Component {
         });
     }
 
-    handleMarking = (subQuestionNo, selectionId) => {
+    handleMarking = (selectionType, subQuestionNo, selectionId, answerCnt) => {
 
         let newMarkingSheet = this.state.markingSheet;
 
-        newMarkingSheet[subQuestionNo].has(selectionId) ? newMarkingSheet[subQuestionNo].delete(selectionId) : newMarkingSheet[subQuestionNo].add(selectionId);
-       
-        this.setState({
-            ...this.state,
-            markingSheet: newMarkingSheet
-        })
+        switch (selectionType) {
+            // 답선택수 제한 없음
+            case 0: {
+
+                newMarkingSheet[subQuestionNo].has(selectionId) ? newMarkingSheet[subQuestionNo].delete(selectionId) : newMarkingSheet[subQuestionNo].add(selectionId);
+
+                this.setState({
+                    ...this.state,
+                    markingSheet: newMarkingSheet
+                })
+                return
+            }
+            // 1개의 답선택가능
+            case 1: {
+                newMarkingSheet[subQuestionNo].clear();
+                newMarkingSheet[subQuestionNo].add(selectionId);
+
+                this.setState({
+                    ...this.state,
+                    markingSheet: newMarkingSheet
+                })
+                return
+            }
+            // 정답수만큼 답선택가능
+            case 2: {
+                if (newMarkingSheet[subQuestionNo].has(selectionId)) {
+                    newMarkingSheet[subQuestionNo].delete(selectionId)
+                } else {
+                    if (newMarkingSheet[subQuestionNo].size >= answerCnt) {
+                        return
+                    }
+                    newMarkingSheet[subQuestionNo].add(selectionId);
+                }
+
+                this.setState({
+                    ...this.state,
+                    markingSheet: newMarkingSheet
+                })
+                return
+            }
+            default:
+                return
+        }
     }
 
 

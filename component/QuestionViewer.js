@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, Platform, View, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
-import { CheckBox, Divider  } from 'react-native-elements';
+import { CheckBox, Divider } from 'react-native-elements';
 
 
 const { width, height } = Dimensions.get("window");
 
 class QuestionViewer
- extends Component {
+    extends Component {
     static navigationOptions = { header: null };
 
     constructor(props) {
@@ -56,12 +56,12 @@ class QuestionViewer
                                                 <TouchableOpacity
                                                     key={selectionIdx}
                                                     style={styles.selection}
-                                                    onPress={() => this.props.handleMarking(subQuestion.subQuestionNo, selection.id)}
+                                                    onPress={() => this.props.handleMarking(subQuestion.selectionType, subQuestion.subQuestionNo, selection.id, subQuestion.answer.length)}
                                                 >
                                                     <CheckBox
                                                         style={{ marginBottom: 10 }}
                                                         checked={this.state.markingSheet[subQuestion.subQuestionNo].has(selection.id)}
-                                                        onPress={() => this.props.handleMarking(subQuestion.subQuestionNo, selection.id)}
+                                                        onPress={() => this.props.handleMarking(subQuestion.selectionType, subQuestion.subQuestionNo, selection.id, subQuestion.answer.length)}
                                                     />
                                                     <Text style={{ marginTop: 5 }}>{selection.text}</Text>
                                                 </TouchableOpacity>
