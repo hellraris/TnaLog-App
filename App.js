@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
-import TopViewer from './component/topViewer';
+import TopViewer from './component/TopViewer';
+import BookList from './component/BookList';
+import { Icon } from 'react-native-elements';
 import {
   createStackNavigator,
-  createAppContainer
+  createAppContainer,
+  createBottomTabNavigator
 } from 'react-navigation';
 
 
@@ -11,30 +14,52 @@ export default class App extends Component {
 
   render() {
     return (
-      <AppContainer style={styles.container}/>
+      <AppContainer style={styles.container} />
     );
   }
 
 }
-  // function
+// function
+
+const Test = {
+  screen: TopViewer,
+  naviagtionOptions: {
+    tabBarVisible: false
+  }
+}
 
 
-const TestStack = createStackNavigator(
-    {
-      TopViewer
-    },
-    {
-      initialRouteName: 'TopViewer'
-    }
-  );
+const BookStack = createStackNavigator({
+  BookList,
+  Test
+});
+
+BookStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarIcon: <Icon name="book" />,
+    tabBarVisible,
+  };
+};
+
+
+const BottomNavigator = createBottomTabNavigator({
+  BOOK: BookStack
+});
+
+
 
 const RootStack = createStackNavigator(
   {
-    TEST: TestStack
+    BOTTOM: BottomNavigator
   },
   {
     headerMode: 'none',
-    initialRouteName: 'TEST'
+    initialRouteName: 'BOTTOM'
   }
 );
 

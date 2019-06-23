@@ -5,7 +5,8 @@ import { CheckBox, Divider  } from 'react-native-elements';
 
 const { width, height } = Dimensions.get("window");
 
-class testViewer extends Component {
+class QuestionViewer
+ extends Component {
     static navigationOptions = { header: null };
 
     constructor(props) {
@@ -170,4 +171,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default testViewer;
+export default QuestionViewer;

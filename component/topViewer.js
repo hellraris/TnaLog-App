@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, StatusBar, Text, Dimensions, AsyncStorage, Button } from 'react-native';
-import TestViewer from './testViewer';
-import ResultViewer from './resultViewer';
+import QuestionViewer from './QuestionViewer';
+import ResultViewer from './ResultViewer';
 
 const { height, width } = Dimensions.get("window");
 
-class topViewer extends Component {
-    static navigationOptions = { header: null };
+class TopViewer extends Component {
+    static navigationOptions = { header: null, bottom: null };
 
     constructor(props) {
         super(props)
@@ -53,7 +53,7 @@ class topViewer extends Component {
                         {this.state.complete ?
                             <ResultViewer questions={this.state.questions} markingSheet={this.state.markingSheet}></ResultViewer>
                             :
-                            <TestViewer questions={this.state.questions} markingSheet={this.state.markingSheet} handleMarking={this.handleMarking} confirmMarking={this.confirmMarking} submitTest={this.submitTest}></TestViewer>
+                            <QuestionViewer questions={this.state.questions} markingSheet={this.state.markingSheet} handleMarking={this.handleMarking} confirmMarking={this.confirmMarking} submitTest={this.submitTest}></QuestionViewer>
                         }
                     </View>
                     : <Text>please wait</Text>
@@ -61,7 +61,6 @@ class topViewer extends Component {
             </View>
         );
     }
-
 
     // function
 
@@ -161,4 +160,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default topViewer;
+export default TopViewer;

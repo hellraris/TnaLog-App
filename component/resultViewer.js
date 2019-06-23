@@ -4,7 +4,7 @@ import { ListItem } from 'react-native-elements';
 
 const { width, height } = Dimensions.get("window");
 
-class resultViewer extends Component {
+class ResultViewer extends Component {
     static navigationOptions = { header: null };
 
     constructor(props) {
@@ -25,7 +25,7 @@ class resultViewer extends Component {
                 {this.state.results ?
                 <ScrollView style={styles.contents}>
                     {this.state.results.map((result, index)=> {
-                        return <ListItem key={index} title={"Q." + (result.questionNo + 1)} subtitle={"Answer: " +  result.answer + "  YourMarking: " + result.marking} />
+                        return <ListItem containerStyle={result.isAnswer ?  'green' : 'red'} key={index} title={"Q." + (result.questionNo + 1)} subtitle={"Answer: " +  result.answer + "  YourMarking: " + result.marking} />
                     })}
                 </ScrollView>
                  : <Text>please wait</Text>
@@ -93,4 +93,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default resultViewer;
+export default ResultViewer;
