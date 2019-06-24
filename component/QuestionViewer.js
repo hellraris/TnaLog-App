@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, Platform, View, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
-import { CheckBox, Divider } from 'react-native-elements';
+import { Modal, TouchableHighlight, StyleSheet, Text, Platform, View, TouchableOpacity, Dimensions, ScrollView, Button } from 'react-native';
+import { CheckBox, Divider, ListItem } from 'react-native-elements';
 
 
 const { width, height } = Dimensions.get("window");
 
-class QuestionViewer
-    extends Component {
+class QuestionViewer extends Component {
     static navigationOptions = { header: null };
 
     constructor(props) {
@@ -15,17 +14,44 @@ class QuestionViewer
         this.state = {
             questions: this.props.questions,
             nowQuestionIdx: 0,
-            markingSheet: this.props.markingSheet
+            markingSheet: this.props.markingSheet,
+            modalVisible: false,
         }
 
     }
 
-    render() {
+    setModalVisible(visible) {
+        this.setState({ modalVisible: visible });
+    }
 
+    render() {
         const { scripts, subQuestions } = this.state.questions[this.state.nowQuestionIdx];
 
         return (
             <View style={styles.container}>
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}>
+                    <View style={{ flex: 1, padding: 20, backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                        <ScrollView style={{ flex: 1, padding: 20, backgroundColor: 'white' }}>
+                            {this.state.markingSheet.map((data, index) => {
+                                let color = '';
+                                data.size === 0 ? color = 'rgba(233,140,122,1.0)' : color = 'rgba(157,233,155,1.0)';
+                                return <ListItem key={index} containerStyle={{ backgroundColor: color, margin: 5 }} title={"Q." + (index + 1)} onPress={() => this.goToQuestion(index)} />
+                            })}
+                            <TouchableHighlight
+                                onPress={() => {
+                                    this.setModalVisible(!this.state.modalVisible);
+                                }}>
+                                <Text>close</Text>
+                            </TouchableHighlight>
+                        </ScrollView>
+                    </View>
+                </Modal>
                 <ScrollView style={styles.contents}>
                     <View style={styles.contentsMargin}>
                         {scripts ? scripts.map((script, index) => {
@@ -42,7 +68,7 @@ class QuestionViewer
                         })
                             : {}}
                     </View>
-                    <Divider style={{ backgroundColor: 'red' }} />
+                    <Divider style={{ backgroundColor: 'grey' }} />
                     <View style={styles.contentsMargin}>
                         {subQuestions ? subQuestions.map((subQuestion, subQuestionIdx) => {
                             return (
@@ -75,12 +101,15 @@ class QuestionViewer
                     </View>
                 </ScrollView>
                 <View style={styles.footer}>
+                    <TouchableOpacity onPress={() => this.setModalVisible(!this.state.modalVisible)} style={styles.controlButton}>
+                        <Text>...</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={this.prevQuestion} style={styles.controlButton}>
                         <Text>prev</Text>
                     </TouchableOpacity>
                     {
                         this.state.nowQuestionIdx === this.props.questions.length - 1 ?
-                            <TouchableOpacity onPress={() => this.props.submitTest()} style={styles.controlButton}>
+                            <TouchableOpacity onPress={() => this.checkComplteTest()} style={styles.controlButton}>
                                 <Text>submit</Text>
                             </TouchableOpacity> :
                             <TouchableOpacity onPress={this.nextQuestion} style={styles.controlButton}>
@@ -90,6 +119,27 @@ class QuestionViewer
                 </View>
             </View>
         );
+    }
+
+    goToQuestion = (index) => {
+        this.setState({
+            ...this.state,
+            modalVisible: !this.state.modalVisible,
+            nowQuestionIdx: index
+        })
+    }
+
+    checkComplteTest = () => {
+        let result = true
+        this.state.markingSheet.forEach((data) => {
+            if (data.size === 0) {
+                result = false;
+                return;
+            }
+        })
+        if (result) {
+            this.props.submitTest()
+        }
     }
 
     prevQuestion = (event) => {

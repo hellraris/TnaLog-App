@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native';
 import { ListItem } from 'react-native-elements';
+import { withNavigation } from 'react-navigation';
 
 const { width, height } = Dimensions.get("window");
 
@@ -23,12 +24,18 @@ class ResultViewer extends Component {
         return (
             <View style={styles.container}>
                 {this.state.results ?
-                <ScrollView style={styles.contents}>
-                    {this.state.results.map((result, index)=> {
-                        return <ListItem containerStyle={result.isAnswer ?  'green' : 'red'} key={index} title={"Q." + (result.questionNo + 1)} subtitle={"Answer: " +  result.answer + "  YourMarking: " + result.marking} />
-                    })}
-                </ScrollView>
-                 : <Text>please wait</Text>
+                    <ScrollView style={styles.contents}>
+                        {this.state.results.map((result, index) => {
+                            return <ListItem
+                                key={index}
+                                containerStyle={result.isAnswer ? 'green' : 'red'}
+                                title={"Q." + (result.questionNo + 1)}
+                                subtitle={"Answer: " + result.answer + "  YourMarking: " + result.marking}
+                                onPress={()=> {this.props.navigation.navigate("ExplanationViewer")}}
+                            />
+                        })}
+                    </ScrollView>
+                    : <Text>please wait</Text>
                 }
             </View>
         );
@@ -55,13 +62,13 @@ class ResultViewer extends Component {
                 const answerIdx = [];
                 const markingIdx = [];
 
-                subQuestion.selections.forEach((selection, index)=> {
+                subQuestion.selections.forEach((selection, index) => {
                     subQuestion.answer.forEach((answer) => {
-                        if (selection.id === answer)  answerIdx.push( index + 1)
+                        if (selection.id === answer) answerIdx.push(index + 1)
                     });
 
                     this.props.markingSheet[subQuestion.subQuestionNo].forEach((marking) => {
-                        if (selection.id === marking)  markingIdx.push( index + 1)
+                        if (selection.id === marking) markingIdx.push(index + 1)
                     });
                 })
 
@@ -93,4 +100,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default ResultViewer;
+export default withNavigation(ResultViewer);

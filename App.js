@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import TopViewer from './component/TopViewer';
 import BookList from './component/BookList';
+import ExplanationViewer from './component/ExplanationViewer';
 import { Icon } from 'react-native-elements';
 import {
   createStackNavigator,
@@ -31,8 +32,15 @@ const Test = {
 
 const BookStack = createStackNavigator({
   BookList,
-  Test
-});
+  Test,
+  ExplanationViewer
+},
+  {
+    navigationOptions: {
+      tabBarIcon: <Icon name="book" />
+    }
+  }
+);
 
 BookStack.navigationOptions = ({ navigation }) => {
   let tabBarVisible = true;

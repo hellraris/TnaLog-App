@@ -16,7 +16,7 @@ class TopViewer extends Component {
             markingSheet: null,
             totalQuestionCnt: 0,
             complete: false,
-            updated: false
+            updated: false,
         }
     }
 
@@ -30,35 +30,28 @@ class TopViewer extends Component {
         });
     }
 
-    submitTest = () => {
-        this.setState({
-            ...this.state,
-            complete: true
-        })
-    }
-
-
     render() {
 
         return (
-            <View style={styles.container}>
-                <StatusBar barStyle="light-content" />
-                <View style={{ flexDirection: "row", marginTop: 45, marginBottom: 15 }}>
-                    <Button onPress={() => this.AsyncTestbook()} title="Async" />
-                    <Button onPress={() => this.SaveToStorage(this.state.testbook)} title="save" />
-                    <Button onPress={() => this.props.navigation.navigate('ResultViewer')} title="switch" />
-                </View>
-                {(this.state.questions && this.state.updated) ?
-                    <View style={styles.card}>
-                        {this.state.complete ?
-                            <ResultViewer questions={this.state.questions} markingSheet={this.state.markingSheet}></ResultViewer>
-                            :
-                            <QuestionViewer questions={this.state.questions} markingSheet={this.state.markingSheet} handleMarking={this.handleMarking} confirmMarking={this.confirmMarking} submitTest={this.submitTest}></QuestionViewer>
-                        }
+                <View style={styles.container}>
+
+                    <StatusBar barStyle="light-content" />
+
+                    <View style={{ flexDirection: "row", marginTop: 45, marginBottom: 15 }}>
+
                     </View>
-                    : <Text>please wait</Text>
-                }
-            </View>
+                    {(this.state.questions && this.state.updated) ?
+                        <View style={styles.card}>
+                            {this.state.complete ?
+                                <ResultViewer questions={this.state.questions} markingSheet={this.state.markingSheet}></ResultViewer>
+                                :
+                                <QuestionViewer questions={this.state.questions} markingSheet={this.state.markingSheet} handleMarking={this.handleMarking} confirmMarking={this.confirmMarking} submitTest={this.submitTest}></QuestionViewer>
+                            }
+                        </View>
+
+                        : <Text>please wait</Text>
+                    }
+                </View >
         );
     }
 
@@ -118,7 +111,7 @@ class TopViewer extends Component {
             return newQuestion;
         });
 
-         // 서브퀘스트 수만큼 답안시트 작성
+        // 서브퀘스트 수만큼 답안시트 작성
         const newMarkingSheet = []
         for (let index = 0; index < subQuestionNo; index++) {
             newMarkingSheet.push(new Set());
@@ -151,8 +144,12 @@ class TopViewer extends Component {
             }
             // 1개의 답선택가능
             case 1: {
-                newMarkingSheet[subQuestionNo].clear();
-                newMarkingSheet[subQuestionNo].add(selectionId);
+                if (newMarkingSheet[subQuestionNo].has(selectionId)) {
+                    newMarkingSheet[subQuestionNo].clear();
+                } else {
+                    newMarkingSheet[subQuestionNo].clear();
+                    newMarkingSheet[subQuestionNo].add(selectionId);
+                }
 
                 this.setState({
                     ...this.state,
@@ -185,6 +182,13 @@ class TopViewer extends Component {
 
     confirmMarking = (subQuestionNo, selectionId) => {
         return this.state.markingSheet[subQuestionNo].has(selectionId);
+    }
+
+    submitTest = () => {
+        this.setState({
+            ...this.state,
+            complete: true
+        })
     }
 
     // function End
