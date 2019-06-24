@@ -31,7 +31,7 @@ class ResultViewer extends Component {
                                 containerStyle={result.isAnswer ? 'green' : 'red'}
                                 title={"Q." + (result.questionNo + 1)}
                                 subtitle={"Answer: " + result.answer + "  YourMarking: " + result.marking}
-                                onPress={()=> {this.props.navigation.navigate("ExplanationViewer")}}
+                                onPress={()=> {this.props.navigation.navigate("ExplanationViewer", {question :this.props.questions[index]})}}
                             />
                         })}
                     </ScrollView>

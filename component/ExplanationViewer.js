@@ -20,6 +20,9 @@ class ExplanationViewer extends Component {
     }
 
     render() {
+        const question = this.props.navigation.getParam('question', 'test');
+        console.log(question);
+
         return (
             <View style={styles.container}>
                 <Text>ExplanationViewer</Text>
