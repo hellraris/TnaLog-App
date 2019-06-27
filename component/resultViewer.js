@@ -67,9 +67,7 @@ class ResultViewer extends Component {
                         if (selection.id === answer) answerIdx.push(index + 1)
                     });
 
-                    this.props.markingSheet[subQuestion.subQuestionNo].forEach((marking) => {
-                        if (selection.id === marking) markingIdx.push(index + 1)
-                    });
+                    markingIdx = [...this.props.markingSheet[subQuestion.subQuestionNo]]
                 })
 
 
