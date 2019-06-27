@@ -58,18 +58,8 @@ class ResultViewer extends Component {
                     isAnswer = false;
                 }
 
-
-                const answerIdx = [];
-                const markingIdx = [];
-
-                subQuestion.selections.forEach((selection, index) => {
-                    subQuestion.answer.forEach((answer) => {
-                        if (selection.id === answer) answerIdx.push(index + 1)
-                    });
-
-                    markingIdx = [...this.props.markingSheet[subQuestion.subQuestionNo]]
-                })
-
+                const answerIdx = subQuestion.answer;
+                const markingIdx = [...this.props.markingSheet[subQuestion.subQuestionNo]];
 
                 results.push({ questionNo: subQuestion.subQuestionNo, answer: answerIdx.sort(), marking: markingIdx.sort(), isAnswer: isAnswer })
             })
