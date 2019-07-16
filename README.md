@@ -1,1 +1,6 @@
-# TnaLog-App
+## TnaLog(Test And Analytics Log) Mobile版
+カスタマイズした問題集を解くアプリケーション
+
+## The Development Environment
+client: React Native (Android基準)
+server: TnaLog Web版のサーバを利用 (https://github.com/hellraris/tnalog)
